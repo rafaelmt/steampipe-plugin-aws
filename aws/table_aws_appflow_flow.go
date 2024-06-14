@@ -41,119 +41,89 @@ func tableAwsAppFlowFlow(_ context.Context) *plugin.Table {
 		Columns: awsRegionalColumns([]*plugin.Column{
 			{
 				Name:        "name",
-				Description: "The name of the flow.",
+				Description: "The specified name of the flow.",
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("FlowName"),
+			},
+			{
+				Name:        "created_at",
+				Description: "Specifies when the flow was created.",
+				Type:        proto.ColumnType_TIMESTAMP,
+				Transform:   transform.FromField("CreatedAt"),
+			},
+			{
+				Name:        "created_by",
+				Description: "The ARN of the user who created the flow.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "description",
+				Description: "A user-entered description of the flow.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "destination_connector_label",
+				Description: "The label of the destination connector in the flow.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "destination_connector_type",
+				Description: "Specifies the destination connector type, such as Salesforce, Amazon S3, Amplitude, and so on.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "status",
+				Description: "Indicates the current status of the flow.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("FlowStatus"),
+			},
+			{
+				Name:        "most_recent_execution_message",
+				Description: "Describes the details of the most recent flow run.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("LastRunExecutionDetails.MostRecentExecutionMessage"),
+			},
+			{
+				Name:        "most_recent_execution_status",
+				Description: "Specifies the status of the most recent flow run.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("LastRunExecutionDetails.MostRecentExecutionStatus"),
+			},
+			{
+				Name:        "most_recent_execution_time",
+				Description: "Specifies the time of the most recent flow run.",
+				Type:        proto.ColumnType_TIMESTAMP,
+				Transform:   transform.FromField("LastRunExecutionDetails.MostRecentExecutionTime"),
+			},
+			{
+				Name:        "last_updated_at",
+				Description: "Specifies when the flow was last updated.",
+				Type:        proto.ColumnType_TIMESTAMP,
+				Transform:   transform.FromField("LastUpdatedAt"),
+			},
+			{
+				Name:        "last_updated_by",
+				Description: "Specifies the account user name that most recently updated the flow.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "source_connector_label",
+				Description: "The label of the source connector in the flow.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "source_connector_type",
+				Description: "Specifies the source connector type, such as Salesforce, Amazon S3, Amplitude, and so on.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "trigger_type",
+				Description: "Specifies the type of flow trigger. This can be OnDemand , Scheduled , or Event.",
+				Type:        proto.ColumnType_STRING,
 			},
 		}),
 	}
 }
-
-// func tableAwsStepFunctionsStateMachine(_ context.Context) *plugin.Table {
-// 	return &plugin.Table{
-// 		Name:        "aws_sfn_state_machine",
-// 		Description: "AWS Step Functions State Machine",
-// 		Get: &plugin.GetConfig{
-// 			KeyColumns: plugin.SingleColumn("arn"),
-// 			IgnoreConfig: &plugin.IgnoreConfig{
-// 				ShouldIgnoreErrorFunc: shouldIgnoreErrors([]string{"ResourceNotFoundException", "StateMachineDoesNotExist", "InvalidArn"}),
-// 			},
-// 			Hydrate: getStepFunctionsStateMachine,
-// 			Tags:    map[string]string{"service": "states", "action": "DescribeStateMachine"},
-// 		},
-// 		List: &plugin.ListConfig{
-// 			Hydrate: listStepFunctionsStateMachines,
-// 			Tags:    map[string]string{"service": "states", "action": "ListStateMachines"},
-// 		},
-// 		HydrateConfig: []plugin.HydrateConfig{
-// 			{
-// 				Func: getStepFunctionsStateMachine,
-// 				Tags: map[string]string{"service": "states", "action": "DescribeStateMachine"},
-// 			},
-// 			{
-// 				Func: getStepFunctionStateMachineTags,
-// 				Tags: map[string]string{"service": "states", "action": "ListTagsForResource"},
-// 			},
-// 		},
-// 		GetMatrixItemFunc: SupportedRegionMatrix(sfnv1.EndpointsID),
-// 		Columns: awsRegionalColumns([]*plugin.Column{
-// {
-// 	Name:        "arn",
-// 	Description: "The Amazon Resource Name (ARN) that identifies the state machine.",
-// 	Type:        proto.ColumnType_STRING,
-// 	Transform:   transform.FromField("StateMachineArn"),
-// },
-// {
-// 	Name:        "status",
-// 	Description: "The current status of the state machine.",
-// 	Type:        proto.ColumnType_STRING,
-// 	Hydrate:     getStepFunctionsStateMachine,
-// },
-// {
-// 	Name:        "type",
-// 	Description: "The type of the state machine.",
-// 	Type:        proto.ColumnType_STRING,
-// },
-// {
-// 	Name:        "creation_date",
-// 	Description: "The date the state machine is created.",
-// 	Type:        proto.ColumnType_TIMESTAMP,
-// },
-// {
-// 	Name:        "definition",
-// 	Description: "The Amazon States Language definition of the state machine.",
-// 	Type:        proto.ColumnType_STRING,
-// 	Hydrate:     getStepFunctionsStateMachine,
-// },
-// {
-// 	Name:        "role_arn",
-// 	Description: "The Amazon Resource Name (ARN) of the IAM role used when creating this state machine.",
-// 	Type:        proto.ColumnType_STRING,
-// 	Hydrate:     getStepFunctionsStateMachine,
-// },
-// {
-// 	Name:        "logging_configuration",
-// 	Description: "The LoggingConfiguration data type is used to set CloudWatch Logs options.",
-// 	Type:        proto.ColumnType_JSON,
-// 	Hydrate:     getStepFunctionsStateMachine,
-// },
-// {
-// 	Name:        "tags_src",
-// 	Description: "The list of tags associated with the state machine.",
-// 	Type:        proto.ColumnType_JSON,
-// 	Hydrate:     getStepFunctionStateMachineTags,
-// 	Transform:   transform.FromValue(),
-// },
-// {
-// 	Name:        "tracing_configuration",
-// 	Description: "Selects whether AWS X-Ray tracing is enabled.",
-// 	Type:        proto.ColumnType_JSON,
-// 	Hydrate:     getStepFunctionsStateMachine,
-// },
-
-// Standard columns for all tables
-// 			{
-// 				Name:        "tags",
-// 				Description: resourceInterfaceDescription("tags"),
-// 				Type:        proto.ColumnType_JSON,
-// 				Hydrate:     getAppFlowFlowTags,
-// 				Transform:   transform.From(stateMachineTagsToTurbotTags),
-// 			},
-// 			{
-// 				Name:        "title",
-// 				Description: resourceInterfaceDescription("title"),
-// 				Type:        proto.ColumnType_STRING,
-// 				Transform:   transform.FromField("flowName"),
-// 			},
-// 			{
-// 				Name:        "akas",
-// 				Description: resourceInterfaceDescription("akas"),
-// 				Type:        proto.ColumnType_JSON,
-// 				Transform:   transform.FromField("flowArn").Transform(transform.EnsureStringArray),
-// 			},
-// 		}),
-// 	}
-// }
 
 //// LIST FUNCTION
 
