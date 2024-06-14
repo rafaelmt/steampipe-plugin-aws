@@ -98,6 +98,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"aws_appautoscaling_policy":                                    tableAwsAppAutoScalingPolicy(ctx),
 			"aws_appautoscaling_target":                                    tableAwsAppAutoScalingTarget(ctx),
 			"aws_appconfig_application":                                    tableAwsAppConfigApplication(ctx),
+			"aws_appflow_flow":                                             tableAwsAppFlowFlow(ctx),
 			"aws_appstream_fleet":                                          tableAwsAppStreamFleet(ctx),
 			"aws_appstream_image":                                          tableAwsAppStreamImage(ctx),
 			"aws_appsync_graphql_api":                                      tableAwsAppsyncGraphQLApi(ctx),
